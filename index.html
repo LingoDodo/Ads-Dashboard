@@ -136,9 +136,12 @@ function metaTotals(){
   return {spend, results, impr, revenue, roas: revenue/spend, cpa: results? spend/results: null};
 }
 function googleTotals(){
-  let cost=0, conv=0, impr=0, clicks=0, val=0;
-  GOOGLE_ASSETS.forEach(a=>{ cost+=a.cost; conv+=a.conv; impr+=a.impr; clicks+=a.clicks; val+=a.val; });
-  return {spend:cost, results:conv, impr, revenue:val, roas: val/cost, cpa: conv? cost/conv: null};
+  // Campaign-level totals (source of truth) from Campaign_report_Google_7_27_9.csv
+  // NOT summed from the asset-level table below — asset rows overlap in cost/impressions
+  // and are kept only for the ad/asset breakdown, not for totals.
+  const cost = 297.50, conv = 6.00, roas = 1.51;
+  const val = Math.round(cost*roas*100)/100; // Conv. value derived from Conv.value/cost ratio
+  return {spend:cost, results:conv, impr:51006, revenue:val, roas: val/cost, cpa: cost/conv};
 }
 const MT = metaTotals(), GT = googleTotals();
 const BLENDED = {
@@ -316,7 +319,7 @@ function renderTable(){
   const p = PLATFORMS[currentPlatform];
   document.getElementById('platformHeader').innerHTML = `
     <h3 class="font-semibold text-sm">${p.label} — Ad / Asset Performance</h3>
-    <p class="text-xs" style="color:var(--muted)">${p.live? (currentPlatform==='google' ? 'Asset-level report — cost/conversions are per-asset attribution and may not equal exact campaign totals due to asset overlap.' : 'Active campaigns only') : 'No connector configured yet for this platform'}</p>`;
+    <p class="text-xs" style="color:var(--muted)">${p.live? (currentPlatform==='google' ? 'Totals (Spend/CPA/ROAS above) use the official campaign-level report. This table is the asset-level breakdown for diagnostics only — do not sum its Spend column, asset costs overlap.' : 'Active campaigns only') : 'No connector configured yet for this platform'}</p>`;
 
   const tableEl = document.getElementById('dataTable');
   const noticeEl = document.getElementById('placeholderNotice');
