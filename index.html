@@ -44,8 +44,8 @@
     <div class="flex items-center gap-3">
       <label class="text-xs uppercase tracking-wide" style="color:var(--muted)">Week</label>
       <select id="weekSelect" class="rounded-lg px-3 py-2 text-sm">
-        <option value="current">Jul 2 – Jul 9, 2026 (current)</option>
-        <option value="prev" disabled>Jun 25 – Jul 1, 2026 (no data yet)</option>
+        <option value="current">Jul 9 – Jul 15, 2026 (current)</option>
+        <option value="prev">Jul 2 – Jul 9, 2026 (history)</option>
       </select>
       <span class="text-xs px-2 py-1 rounded-full card2" style="color:var(--good)">● Active-only filter: ON</span>
     </div>
@@ -54,17 +54,27 @@
   <!-- KPI SUMMARY -->
   <div id="kpiGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6"></div>
 
+  <!-- CONSOLIDATION TEST BANNER -->
+  <div class="card p-4 sm:p-5 mb-6" style="border-left:3px solid var(--accent2)">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-semibold text-sm">Meta Consolidation Test — 3 legacy campaigns → 1 new campaign</h2>
+      <span class="text-[10px] px-2 py-0.5 rounded-full card2" style="color:var(--accent2)">Special comparison</span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="consolidationGrid"></div>
+    <p class="text-xs mt-3" style="color:var(--muted)" id="consolidationNote"></p>
+  </div>
+
   <!-- CHART -->
   <div class="card p-4 sm:p-5 mb-6">
     <div class="flex items-center justify-between mb-3">
       <h2 class="font-semibold text-sm">Spend by Platform — This Week vs Previous Week</h2>
       <div class="flex items-center gap-4 text-xs" style="color:var(--muted)">
         <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded-sm" style="background:var(--accent)"></span> This week (real)</span>
-        <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded-sm placeholder-hatch"></span> Previous week (placeholder)</span>
+        <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded-sm" style="background:#2a3342"></span> Previous week (real)</span>
       </div>
     </div>
     <canvas id="spendChart" height="200"></canvas>
-    <p class="text-xs mt-2" style="color:var(--muted)">Previous-week bars are illustrative placeholders — once next week's report is added, this comparison becomes live WoW data.</p>
+    <p class="text-xs mt-2" style="color:var(--muted)">Meta bars reflect active-campaign spend only. Legacy campaigns' residual spend during their wind-down is excluded (see consolidation panel above).</p>
   </div>
 
   <!-- PLATFORM METRIC BLOCKS -->
@@ -114,10 +124,26 @@
 </div>
 
 <script>
-/* ================= DATA (Jul 2–9, 2026, active campaigns only) ================= */
-const META_ADS = [{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Filipino Demo Video","spend":0.43,"results":0,"impr":23,"reach":20,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Filipino Music Mode","spend":1062.87,"results":25.0,"impr":53474,"reach":28742,"roas":1.63},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Gujarati Demo Video","spend":0.42,"results":0,"impr":31,"reach":29,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Gujarati Music Mode","spend":297.88,"results":6.0,"impr":18243,"reach":11762,"roas":1.87},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Hindi Demo Video","spend":0.66,"results":0,"impr":25,"reach":24,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Hindi Music Mode","spend":8.28,"results":1.0,"impr":533,"reach":492,"roas":10.87},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Kannada Demo Video","spend":0.16,"results":0,"impr":11,"reach":9,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Kannada Music Mode","spend":0.02,"results":0,"impr":5,"reach":5,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Malayalam Demo Video","spend":0.16,"results":0,"impr":13,"reach":13,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Malayalam Music Mode","spend":0.38,"results":0,"impr":25,"reach":20,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Marathi Demo Video","spend":1.04,"results":0,"impr":53,"reach":43,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Marathi Music Mode","spend":221.65,"results":14.0,"impr":13651,"reach":8784,"roas":5.38},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - English Demo Video","spend":0.01,"results":0,"impr":1,"reach":1,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - English Music Mode","spend":0.11,"results":0,"impr":8,"reach":8,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - French Demo Video","spend":64.65,"results":1.0,"impr":2341,"reach":1691,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - French Music Mode","spend":75.48,"results":2.0,"impr":2625,"reach":1815,"roas":1.46},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Spanish","spend":0.0,"results":0,"impr":1,"reach":1,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Hindi 2","spend":6.48,"results":0,"impr":339,"reach":268,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Punjabi 2","spend":0.03,"results":0,"impr":5,"reach":5,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Spanish 2","spend":6.69,"results":0,"impr":350,"reach":278,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Hindi","spend":0.0,"results":0,"impr":0,"reach":0,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Punjabi","spend":1.17,"results":0,"impr":43,"reach":41,"roas":null},{"group":"Geo Spanish","name":"LingoDodo - Sales W1 - Spanish","spend":53.26,"results":1.0,"impr":2289,"reach":1650,"roas":1.1},{"group":"Geo Spanish","name":"LingoDodo - Sales W1 - Spanish 2","spend":11.47,"results":0,"impr":370,"reach":308,"roas":null},{"group":"Geo Punjabi","name":"LingoDodo - Sales W1 - Punjabi 2","spend":48.6,"results":0,"impr":3086,"reach":1872,"roas":null},{"group":"Geo Punjabi","name":"LingoDodo - Sales W1 - Punjabi","spend":7.76,"results":0,"impr":537,"reach":445,"roas":null},{"group":"Geo Hindi","name":"LingoDodo - Sales W1 - Hindi","spend":3.9,"results":0,"impr":224,"reach":200,"roas":null},{"group":"Geo Hindi","name":"LingoDodo - Sales W1 - Hindi 2","spend":53.47,"results":1.0,"impr":3746,"reach":2696,"roas":3.18},{"group":"Broad","name":"W2 Sales - Gift","spend":30.86,"results":1.0,"impr":1125,"reach":751,"roas":2.92},{"group":"Broad","name":"W2 Sales - Independence","spend":5.64,"results":0,"impr":249,"reach":173,"roas":null},{"group":"Broad","name":"W2 Sales - Grandparents","spend":2.84,"results":0,"impr":111,"reach":86,"roas":null},{"group":"Broad","name":"W2 Sales - Heritage","spend":103.83,"results":2.0,"impr":3404,"reach":2459,"roas":1.22},{"group":"Broad","name":"W2 Sales - Screen-Free","spend":98.6,"results":2.0,"impr":4285,"reach":2537,"roas":1.52}];
+/* ================= DATA: PREVIOUS WEEK (Jun 26/Jul 2 – Jul 9, 2026) — frozen from last week's report ================= */
+const META_ADS_PREV = [{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Filipino Demo Video","spend":0.43,"results":0,"impr":23,"reach":20,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Filipino Music Mode","spend":1062.87,"results":25.0,"impr":53474,"reach":28742,"roas":1.63},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Gujarati Demo Video","spend":0.42,"results":0,"impr":31,"reach":29,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Gujarati Music Mode","spend":297.88,"results":6.0,"impr":18243,"reach":11762,"roas":1.87},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Hindi Demo Video","spend":0.66,"results":0,"impr":25,"reach":24,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Hindi Music Mode","spend":8.28,"results":1.0,"impr":533,"reach":492,"roas":10.87},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Kannada Demo Video","spend":0.16,"results":0,"impr":11,"reach":9,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Kannada Music Mode","spend":0.02,"results":0,"impr":5,"reach":5,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Malayalam Demo Video","spend":0.16,"results":0,"impr":13,"reach":13,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Malayalam Music Mode","spend":0.38,"results":0,"impr":25,"reach":20,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Marathi Demo Video","spend":1.04,"results":0,"impr":53,"reach":43,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - Marathi Music Mode","spend":221.65,"results":14.0,"impr":13651,"reach":8784,"roas":5.38},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - English Demo Video","spend":0.01,"results":0,"impr":1,"reach":1,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - English Music Mode","spend":0.11,"results":0,"impr":8,"reach":8,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - French Demo Video","spend":64.65,"results":1.0,"impr":2341,"reach":1691,"roas":null},{"group":"LP Hybrid","name":"LP - Hybrid - Sales - Open ADV+ Audience - French Music Mode","spend":75.48,"results":2.0,"impr":2625,"reach":1815,"roas":1.46},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Spanish","spend":0.0,"results":0,"impr":1,"reach":1,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Hindi 2","spend":6.48,"results":0,"impr":339,"reach":268,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Punjabi 2","spend":0.03,"results":0,"impr":5,"reach":5,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Spanish 2","spend":6.69,"results":0,"impr":350,"reach":278,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Hindi","spend":0.0,"results":0,"impr":0,"reach":0,"roas":null},{"group":"LP Hybrid","name":"LingoDodo - Sales W1 - Punjabi","spend":1.17,"results":0,"impr":43,"reach":41,"roas":null},{"group":"Geo Spanish","name":"LingoDodo - Sales W1 - Spanish","spend":53.26,"results":1.0,"impr":2289,"reach":1650,"roas":1.1},{"group":"Geo Spanish","name":"LingoDodo - Sales W1 - Spanish 2","spend":11.47,"results":0,"impr":370,"reach":308,"roas":null},{"group":"Geo Punjabi","name":"LingoDodo - Sales W1 - Punjabi 2","spend":48.6,"results":0,"impr":3086,"reach":1872,"roas":null},{"group":"Geo Punjabi","name":"LingoDodo - Sales W1 - Punjabi","spend":7.76,"results":0,"impr":537,"reach":445,"roas":null},{"group":"Geo Hindi","name":"LingoDodo - Sales W1 - Hindi","spend":3.9,"results":0,"impr":224,"reach":200,"roas":null},{"group":"Geo Hindi","name":"LingoDodo - Sales W1 - Hindi 2","spend":53.47,"results":1.0,"impr":3746,"reach":2696,"roas":3.18},{"group":"Broad","name":"W2 Sales - Gift","spend":30.86,"results":1.0,"impr":1125,"reach":751,"roas":2.92},{"group":"Broad","name":"W2 Sales - Independence","spend":5.64,"results":0,"impr":249,"reach":173,"roas":null},{"group":"Broad","name":"W2 Sales - Grandparents","spend":2.84,"results":0,"impr":111,"reach":86,"roas":null},{"group":"Broad","name":"W2 Sales - Heritage","spend":103.83,"results":2.0,"impr":3404,"reach":2459,"roas":1.22},{"group":"Broad","name":"W2 Sales - Screen-Free","spend":98.6,"results":2.0,"impr":4285,"reach":2537,"roas":1.52}];
 
-const GOOGLE_ASSETS = [{"name":"Help Your Kids Learn Languages","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":7178,"clicks":166,"cost":43.81,"roas":0.0},{"name":"Malayalam Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":89.99,"impr":185,"clicks":14,"cost":28.53,"roas":3.15},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":1277,"clicks":67,"cost":18.42,"roas":0.0},{"name":"Hindi Collection","type":"Sitelink","status":"Eligible","conv":2.0,"val":174.98,"impr":275,"clicks":26,"cost":29.67,"roas":5.9},{"name":"Available in 13 Languages","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":578,"clicks":10,"cost":5.34,"roas":0.0},{"name":"Kannada Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":141,"clicks":10,"cost":20.08,"roas":0.0},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":2.0,"val":170.99,"impr":972,"clicks":42,"cost":12.7,"roas":13.46},{"name":"Vertical image asset","type":"Vertical image","status":"Eligible","conv":0.0,"val":0.0,"impr":1106,"clicks":20,"cost":4.35,"roas":0.0},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":1971,"clicks":50,"cost":13.08,"roas":0.0},{"name":"A premium educational gift for bilingual","type":"Description","status":"Eligible","conv":0.0,"val":0.0,"impr":3782,"clicks":54,"cost":14.02,"roas":0.0},{"name":"Screen-Free Language Fun","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":13333,"clicks":152,"cost":25.23,"roas":0.0},{"name":"Marathi Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":81.0,"impr":188,"clicks":16,"cost":20.01,"roas":4.05},{"name":"Gujarati Collection","type":"Sitelink","status":"Eligible","conv":2.0,"val":170.99,"impr":208,"clicks":15,"cost":19.03,"roas":8.99},{"name":"Urdu Collection","type":"Sitelink","status":"Eligible","conv":2.0,"val":174.98,"impr":139,"clicks":8,"cost":7.45,"roas":23.49},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":31,"clicks":1,"cost":0.16,"roas":0.0},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":21,"clicks":0,"cost":0.0,"roas":null},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":15,"clicks":0,"cost":0.0,"roas":null},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":11718,"clicks":89,"cost":15.64,"roas":0.0},{"name":"Give your child the gift of bilingual...","type":"Long headline","status":"Eligible","conv":0.0,"val":0.0,"impr":34,"clicks":1,"cost":0.14,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":15,"clicks":0,"cost":0.17,"roas":0.0},{"name":"Blog Center","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":3,"clicks":0,"cost":0.0,"roas":null},{"name":"Punjabi Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":89.99,"impr":115,"clicks":4,"cost":7.9,"roas":11.39},{"name":"No apps, no subscriptions—just simple...","type":"Description","status":"Eligible","conv":0.0,"val":0.0,"impr":17331,"clicks":309,"cost":80.06,"roas":0.0},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":6240,"clicks":48,"cost":10.5,"roas":0.0},{"name":"Keep Your Heritage Alive","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":920,"clicks":9,"cost":1.81,"roas":0.0},{"name":"FAQs","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":15,"clicks":0,"cost":0.0,"roas":null},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":1,"clicks":0,"cost":0.0,"roas":null},{"name":"Help Kids Learn Faster","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":612,"clicks":7,"cost":1.87,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":53,"clicks":1,"cost":0.73,"roas":0.0},{"name":"No Apps. No Screens.","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":3635,"clicks":23,"cost":4.07,"roas":0.0},{"name":"Tamil Collection","type":"Sitelink","status":"Eligible","conv":3.0,"val":255.98,"impr":297,"clicks":32,"cost":40.79,"roas":6.28},{"name":"Telugu Collection","type":"Sitelink","status":"Eligible","conv":4.0,"val":345.97,"impr":201,"clicks":22,"cost":25.28,"roas":13.69},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":2,"clicks":0,"cost":0.03,"roas":0.0},{"name":"YouTube video asset (Horizontal)","type":"Horizontal YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":109,"clicks":2,"cost":0.65,"roas":0.0},{"name":"Bilingual Kids Start Here","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":12040,"clicks":199,"cost":54.01,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":8,"clicks":0,"cost":0.1,"roas":0.0},{"name":"Interactive language learning designed to...","type":"Long headline","status":"Eligible","conv":0.0,"val":0.0,"impr":47,"clicks":1,"cost":0.33,"roas":0.0},{"name":"Our Story","type":"Sitelink","status":"Eligible","conv":1.0,"val":81.0,"impr":226,"clicks":15,"cost":22.63,"roas":3.58},{"name":"LingoDodo","type":"Business name","status":"Eligible","conv":2.0,"val":165.99,"impr":43668,"clicks":638,"cost":180.69,"roas":0.92},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":8963,"clicks":122,"cost":26.66,"roas":0.0},{"name":"Logo asset","type":"Logo","status":"Eligible","conv":0.0,"val":0.0,"impr":19792,"clicks":276,"cost":58.75,"roas":0.0},{"name":"Made for Curious Kids","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":1653,"clicks":23,"cost":6.57,"roas":0.0},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":8806,"clicks":144,"cost":35.72,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":2,"clicks":0,"cost":0.03,"roas":0.0},{"name":"Premium Language Learning Pad","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":472,"clicks":6,"cost":0.9,"roas":0.0},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":21,"clicks":1,"cost":0.44,"roas":0.0},{"name":"Products Offered","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":16,"clicks":1,"cost":1.32,"roas":0.0},{"name":"Build Bilingual Confidence","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":2684,"clicks":29,"cost":6.01,"roas":0.0},{"name":"Contact Us","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":26,"clicks":1,"cost":1.84,"roas":0.0},{"name":"Filipino Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":89.99,"impr":304,"clicks":21,"cost":27.2,"roas":3.31},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":627,"clicks":20,"cost":4.6,"roas":0.0},{"name":"Help your child stay connected to your...","type":"Description","status":"Eligible","conv":4.0,"val":345.97,"impr":5035,"clicks":139,"cost":82.7,"roas":4.18},{"name":"Give your child a lifelong connection to...","type":"Description","status":"Eligible","conv":0.0,"val":0.0,"impr":17990,"clicks":158,"cost":26.62,"roas":0.0},{"name":"Help your child learn your family's lang...","type":"Long headline","status":"Eligible","conv":0.0,"val":0.0,"impr":43,"clicks":1,"cost":0.27,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":14,"clicks":0,"cost":0.3,"roas":0.0},{"name":"English Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":52,"clicks":1,"cost":0.91,"roas":0.0},{"name":"Logo asset","type":"Logo","status":"Eligible","conv":0.0,"val":0.0,"impr":21992,"clicks":324,"cost":79.38,"roas":0.0},{"name":"French Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":84.99,"impr":126,"clicks":12,"cost":9.07,"roas":9.37},{"name":"A Gift That Lasts","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":662,"clicks":3,"cost":0.58,"roas":0.0},{"name":"Spanish Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":200,"clicks":22,"cost":26.32,"roas":0.0}];
+const GOOGLE_ASSETS_PREV = [{"name":"Help Your Kids Learn Languages","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":7178,"clicks":166,"cost":43.81,"roas":0.0},{"name":"Malayalam Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":89.99,"impr":185,"clicks":14,"cost":28.53,"roas":3.15},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":1277,"clicks":67,"cost":18.42,"roas":0.0},{"name":"Hindi Collection","type":"Sitelink","status":"Eligible","conv":2.0,"val":174.98,"impr":275,"clicks":26,"cost":29.67,"roas":5.9},{"name":"Available in 13 Languages","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":578,"clicks":10,"cost":5.34,"roas":0.0},{"name":"Kannada Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":141,"clicks":10,"cost":20.08,"roas":0.0},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":2.0,"val":170.99,"impr":972,"clicks":42,"cost":12.7,"roas":13.46},{"name":"Vertical image asset","type":"Vertical image","status":"Eligible","conv":0.0,"val":0.0,"impr":1106,"clicks":20,"cost":4.35,"roas":0.0},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":1971,"clicks":50,"cost":13.08,"roas":0.0},{"name":"A premium educational gift for bilingual","type":"Description","status":"Eligible","conv":0.0,"val":0.0,"impr":3782,"clicks":54,"cost":14.02,"roas":0.0},{"name":"Screen-Free Language Fun","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":13333,"clicks":152,"cost":25.23,"roas":0.0},{"name":"Marathi Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":81.0,"impr":188,"clicks":16,"cost":20.01,"roas":4.05},{"name":"Gujarati Collection","type":"Sitelink","status":"Eligible","conv":2.0,"val":170.99,"impr":208,"clicks":15,"cost":19.03,"roas":8.99},{"name":"Urdu Collection","type":"Sitelink","status":"Eligible","conv":2.0,"val":174.98,"impr":139,"clicks":8,"cost":7.45,"roas":23.49},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":31,"clicks":1,"cost":0.16,"roas":0.0},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":21,"clicks":0,"cost":0.0,"roas":null},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":15,"clicks":0,"cost":0.0,"roas":null},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":11718,"clicks":89,"cost":15.64,"roas":0.0},{"name":"Give your child the gift of bilingual...","type":"Long headline","status":"Eligible","conv":0.0,"val":0.0,"impr":34,"clicks":1,"cost":0.14,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":15,"clicks":0,"cost":0.17,"roas":0.0},{"name":"Blog Center","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":3,"clicks":0,"cost":0.0,"roas":null},{"name":"Punjabi Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":89.99,"impr":115,"clicks":4,"cost":7.9,"roas":11.39},{"name":"No apps, no subscriptions—just simple...","type":"Description","status":"Eligible","conv":0.0,"val":0.0,"impr":17331,"clicks":309,"cost":80.06,"roas":0.0},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":6240,"clicks":48,"cost":10.5,"roas":0.0},{"name":"Keep Your Heritage Alive","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":920,"clicks":9,"cost":1.81,"roas":0.0},{"name":"FAQs","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":15,"clicks":0,"cost":0.0,"roas":null},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":1,"clicks":0,"cost":0.0,"roas":null},{"name":"Help Kids Learn Faster","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":612,"clicks":7,"cost":1.87,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":53,"clicks":1,"cost":0.73,"roas":0.0},{"name":"No Apps. No Screens.","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":3635,"clicks":23,"cost":4.07,"roas":0.0},{"name":"Tamil Collection","type":"Sitelink","status":"Eligible","conv":3.0,"val":255.98,"impr":297,"clicks":32,"cost":40.79,"roas":6.28},{"name":"Telugu Collection","type":"Sitelink","status":"Eligible","conv":4.0,"val":345.97,"impr":201,"clicks":22,"cost":25.28,"roas":13.69},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":2,"clicks":0,"cost":0.03,"roas":0.0},{"name":"YouTube video asset (Horizontal)","type":"Horizontal YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":109,"clicks":2,"cost":0.65,"roas":0.0},{"name":"Bilingual Kids Start Here","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":12040,"clicks":199,"cost":54.01,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":8,"clicks":0,"cost":0.1,"roas":0.0},{"name":"Interactive language learning designed to...","type":"Long headline","status":"Eligible","conv":0.0,"val":0.0,"impr":47,"clicks":1,"cost":0.33,"roas":0.0},{"name":"Our Story","type":"Sitelink","status":"Eligible","conv":1.0,"val":81.0,"impr":226,"clicks":15,"cost":22.63,"roas":3.58},{"name":"LingoDodo","type":"Business name","status":"Eligible","conv":2.0,"val":165.99,"impr":43668,"clicks":638,"cost":180.69,"roas":0.92},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":8963,"clicks":122,"cost":26.66,"roas":0.0},{"name":"Logo asset","type":"Logo","status":"Eligible","conv":0.0,"val":0.0,"impr":19792,"clicks":276,"cost":58.75,"roas":0.0},{"name":"Made for Curious Kids","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":1653,"clicks":23,"cost":6.57,"roas":0.0},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":8806,"clicks":144,"cost":35.72,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":2,"clicks":0,"cost":0.03,"roas":0.0},{"name":"Premium Language Learning Pad","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":472,"clicks":6,"cost":0.9,"roas":0.0},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":21,"clicks":1,"cost":0.44,"roas":0.0},{"name":"Products Offered","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":16,"clicks":1,"cost":1.32,"roas":0.0},{"name":"Build Bilingual Confidence","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":2684,"clicks":29,"cost":6.01,"roas":0.0},{"name":"Contact Us","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":26,"clicks":1,"cost":1.84,"roas":0.0},{"name":"Filipino Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":89.99,"impr":304,"clicks":21,"cost":27.2,"roas":3.31},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":627,"clicks":20,"cost":4.6,"roas":0.0},{"name":"Help your child stay connected to your...","type":"Description","status":"Eligible","conv":4.0,"val":345.97,"impr":5035,"clicks":139,"cost":82.7,"roas":4.18},{"name":"Give your child a lifelong connection to...","type":"Description","status":"Eligible","conv":0.0,"val":0.0,"impr":17990,"clicks":158,"cost":26.62,"roas":0.0},{"name":"Help your child learn your family's lang...","type":"Long headline","status":"Eligible","conv":0.0,"val":0.0,"impr":43,"clicks":1,"cost":0.27,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":14,"clicks":0,"cost":0.3,"roas":0.0},{"name":"English Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":52,"clicks":1,"cost":0.91,"roas":0.0},{"name":"Logo asset","type":"Logo","status":"Eligible","conv":0.0,"val":0.0,"impr":21992,"clicks":324,"cost":79.38,"roas":0.0},{"name":"French Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":84.99,"impr":126,"clicks":12,"cost":9.07,"roas":9.37},{"name":"A Gift That Lasts","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":662,"clicks":3,"cost":0.58,"roas":0.0},{"name":"Spanish Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":200,"clicks":22,"cost":26.32,"roas":0.0}];
+
+/* ================= DATA: CURRENT WEEK (Jul 9 – Jul 15, 2026) — new uploads ================= */
+// The 3 legacy Meta campaigns (LP Hybrid, Geo, Broad) were stopped mid-week and replaced by 1 consolidated campaign.
+// Active-campaign table below shows ONLY the new consolidated campaign's ads (matches "Active-only" filter policy).
+const META_ADS_CURRENT = [
+  {"group":"Updated Sales Set - 7/10","name":"Updated Sales - V1","spend":130.19,"results":1,"impr":3769,"reach":2512,"roas":0.422383},
+  {"group":"Updated Sales Set - 7/10","name":"Updated Sales - V2","spend":4.98,"results":0,"impr":127,"reach":96,"roas":null},
+  {"group":"Updated Sales Set - 7/10","name":"Updated Sales - V3","spend":432.72,"results":2,"impr":14846,"reach":10056,"roas":0.26583},
+  {"group":"Updated Sales Set - 7/10","name":"Updated Sales - V4","spend":56.16,"results":1,"impr":1887,"reach":1247,"roas":1.442308},
+  {"group":"Updated Sales Set - 7/10","name":"Updated Sales - V5","spend":69.5,"results":1,"impr":2365,"reach":1514,"roas":0.791223}
+];
+
+// Residual spend this week from the 3 legacy campaigns as they wound down (excluded from active totals; used only in the consolidation panel).
+const META_LEGACY_RESIDUAL_CURRENT = { spend: 227.27+46.43+63.04, results: 9+0+1 };
+
+const GOOGLE_ASSETS_CURRENT = [{"name":"No apps, no subscriptions—just simple...","type":"Description","status":"Eligible","conv":1.0,"val":89.99,"impr":301,"clicks":9,"cost":2.12,"roas":42.40},{"name":"Kannada Collection","type":"Sitelink","status":"Eligible","conv":2.0,"val":175.49,"impr":117,"clicks":13,"cost":28.80,"roas":6.09},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":1,"clicks":0,"cost":0.0,"roas":null},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":609,"clicks":25,"cost":23.37,"roas":0.0},{"name":"Screen-Free Language Fun","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":3014,"clicks":54,"cost":12.10,"roas":0.0},{"name":"YouTube video asset (Horizontal)","type":"Horizontal YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":105,"clicks":0,"cost":0.69,"roas":0.0},{"name":"Available in 13 Languages","type":"Headline","status":"Eligible","conv":1.0,"val":89.99,"impr":104,"clicks":5,"cost":3.73,"roas":24.11},{"name":"Give your child a lifelong connection...","type":"Description","status":"Eligible","conv":0.0,"val":0.0,"impr":2132,"clicks":28,"cost":7.86,"roas":0.0},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":606,"clicks":2,"cost":0.62,"roas":0.0},{"name":"English Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":41,"clicks":1,"cost":9.80,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":1,"clicks":0,"cost":0.01,"roas":0.0},{"name":"No Apps. No Screens.","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":154,"clicks":2,"cost":3.70,"roas":0.0},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":79,"clicks":2,"cost":0.39,"roas":0.0},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":1668,"clicks":30,"cost":7.24,"roas":0.0},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":89,"clicks":4,"cost":4.74,"roas":0.0},{"name":"Vertical image asset","type":"Vertical image","status":"Eligible","conv":0.0,"val":0.0,"impr":29,"clicks":1,"cost":0.09,"roas":0.0},{"name":"Hindi Collection","type":"Sitelink","status":"Eligible","conv":4.0,"val":418.48,"impr":208,"clicks":36,"cost":49.55,"roas":8.45},{"name":"Horizontal image asset","type":"Horizontal image","status":"Eligible","conv":0.0,"val":0.0,"impr":618,"clicks":6,"cost":1.80,"roas":0.0},{"name":"Marathi Collection","type":"Sitelink","status":"Eligible","conv":3.0,"val":225.48,"impr":175,"clicks":33,"cost":48.81,"roas":4.62},{"name":"French Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":99,"clicks":20,"cost":13.89,"roas":0.0},{"name":"Filipino Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":265,"clicks":35,"cost":42.45,"roas":0.0},{"name":"Build Bilingual Confidence","type":"Headline","status":"Eligible","conv":1.0,"val":89.99,"impr":122,"clicks":10,"cost":7.53,"roas":11.95},{"name":"Tamil Collection","type":"Sitelink","status":"Eligible","conv":5.0,"val":468.47,"impr":218,"clicks":38,"cost":51.78,"roas":9.05},{"name":"Give your child the gift of bilingual...","type":"Long headline","status":"Eligible","conv":0.0,"val":0.0,"impr":33,"clicks":0,"cost":0.03,"roas":0.0},{"name":"Spanish Collection","type":"Sitelink","status":"Eligible","conv":2.0,"val":242.99,"impr":169,"clicks":31,"cost":28.63,"roas":8.49},{"name":"Gujarati Collection","type":"Sitelink","status":"Eligible","conv":1.0,"val":49.99,"impr":151,"clicks":16,"cost":39.83,"roas":1.26},{"name":"A Gift That Lasts","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":92,"clicks":2,"cost":1.19,"roas":0.0},{"name":"Punjabi Collection","type":"Sitelink","status":"Eligible","conv":2.0,"val":202.99,"impr":130,"clicks":15,"cost":20.57,"roas":9.87},{"name":"Made for Curious Kids","type":"Headline","status":"Eligible","conv":1.0,"val":89.99,"impr":88,"clicks":4,"cost":1.43,"roas":62.83},{"name":"Urdu Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":86,"clicks":1,"cost":1.21,"roas":0.0},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":34,"clicks":2,"cost":3.87,"roas":0.0},{"name":"Interactive language learning designed to...","type":"Long headline","status":"Eligible","conv":0.0,"val":0.0,"impr":42,"clicks":0,"cost":0.15,"roas":0.0},{"name":"Help your child stay connected to your...","type":"Description","status":"Eligible","conv":4.0,"val":378.48,"impr":669,"clicks":68,"cost":94.39,"roas":4.01},{"name":"Help your child learn your family's lang...","type":"Long headline","status":"Eligible","conv":0.0,"val":0.0,"impr":42,"clicks":0,"cost":0.11,"roas":0.0},{"name":"Our Story","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":159,"clicks":17,"cost":36.32,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":6,"clicks":0,"cost":0.02,"roas":0.0},{"name":"Premium Language Learning Pad","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":53,"clicks":3,"cost":4.48,"roas":0.0},{"name":"FAQs","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":8,"clicks":1,"cost":1.34,"roas":0.0},{"name":"Malayalam Collection","type":"Sitelink","status":"Eligible","conv":0.0,"val":0.0,"impr":152,"clicks":19,"cost":29.57,"roas":0.0},{"name":"Contact Us","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":9,"clicks":0,"cost":0.0,"roas":null},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":16,"clicks":0,"cost":0.31,"roas":0.0},{"name":"Logo asset","type":"Logo","status":"Eligible","conv":0.0,"val":0.0,"impr":1778,"clicks":26,"cost":6.12,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":21,"clicks":0,"cost":0.22,"roas":0.0},{"name":"Blog Center","type":"Sitelink","status":"Unknown","conv":0.0,"val":0.0,"impr":3,"clicks":0,"cost":0.0,"roas":null},{"name":"Logo asset","type":"Logo","status":"Limited","conv":0.0,"val":0.0,"impr":1731,"clicks":32,"cost":6.45,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":3,"clicks":0,"cost":0.01,"roas":0.0},{"name":"Keep Your Heritage Alive","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":41,"clicks":0,"cost":0.08,"roas":0.0},{"name":"Products Offered","type":"Sitelink","status":"Unknown","conv":1.0,"val":89.99,"impr":10,"clicks":2,"cost":0.09,"roas":988.25},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":0,"clicks":0,"cost":0.0,"roas":null},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":10,"clicks":1,"cost":0.08,"roas":0.0},{"name":"Square image asset","type":"Square image","status":"Eligible","conv":0.0,"val":0.0,"impr":10,"clicks":1,"cost":0.10,"roas":0.0},{"name":"A premium educational gift for bilingual...","type":"Description","status":"Eligible","conv":1.0,"val":89.99,"impr":1142,"clicks":34,"cost":14.93,"roas":6.03},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":0,"clicks":0,"cost":0.0,"roas":null},{"name":"Bilingual Kids Start Here","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":86,"clicks":1,"cost":0.89,"roas":0.0},{"name":"YouTube video asset (Vertical)","type":"Vertical YouTube video","status":"Eligible","conv":0.0,"val":0.0,"impr":2,"clicks":0,"cost":0.05,"roas":0.0},{"name":"Telugu Collection","type":"Sitelink","status":"Eligible","conv":4.0,"val":378.48,"impr":153,"clicks":23,"cost":28.23,"roas":13.40},{"name":"Image asset","type":"--","status":"Eligible","conv":0.0,"val":0.0,"impr":0,"clicks":0,"cost":0.0,"roas":null},{"name":"Help Kids Learn Faster","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":90,"clicks":2,"cost":0.43,"roas":0.0},{"name":"Help Your Kids Learn Languages","type":"Headline","status":"Eligible","conv":0.0,"val":0.0,"impr":52,"clicks":0,"cost":0.02,"roas":0.0},{"name":"LingoDodo","type":"Business name","status":"Eligible","conv":5.0,"val":468.47,"impr":4026,"clicks":135,"cost":121.37,"roas":3.86}];
 
 const PLATFORMS = {
   meta:   { label:"Meta",    color:"var(--meta)",   live:true },
@@ -127,107 +153,169 @@ const PLATFORMS = {
 };
 
 /* ================= AGGREGATES ================= */
-function metaTotals(){
+function metaTotals(ads){
   let spend=0, results=0, impr=0, revenue=0;
-  META_ADS.forEach(a=>{
+  ads.forEach(a=>{
     spend+=a.spend; results+=a.results; impr+=a.impr;
     if(a.roas!=null) revenue += a.spend*a.roas;
   });
   return {spend, results, impr, revenue, roas: revenue/spend, cpa: results? spend/results: null};
 }
-function googleTotals(){
-  // Campaign-level totals (source of truth) from Campaign_report_Google_7_27_9.csv
-  // NOT summed from the asset-level table below — asset rows overlap in cost/impressions
-  // and are kept only for the ad/asset breakdown, not for totals.
-  const cost = 297.50, conv = 6.00, roas = 1.51;
-  const val = Math.round(cost*roas*100)/100; // Conv. value derived from Conv.value/cost ratio
-  return {spend:cost, results:conv, impr:51006, revenue:val, roas: val/cost, cpa: cost/conv};
+// Google totals use the official campaign-level report as source of truth (NOT summed from
+// the asset-level table — asset rows overlap in cost/impressions and are for diagnostics only).
+function googleTotalsFromCampaign(cost, conv, roas, impr){
+  const val = Math.round(cost*roas*100)/100;
+  return {spend:cost, results:conv, impr, revenue:val, roas: val/cost, cpa: cost/conv};
 }
-const MT = metaTotals(), GT = googleTotals();
-const BLENDED = {
-  spend: MT.spend + GT.spend,
-  results: MT.results + GT.results,
-  revenue: MT.revenue + GT.revenue,
+
+const MT_CURRENT = metaTotals(META_ADS_CURRENT);                 // active-only: new consolidated campaign
+const MT_PREV    = metaTotals(META_ADS_PREV);                    // active-only: the 3 legacy campaigns (last week)
+const GT_CURRENT = googleTotalsFromCampaign(261.80, 9.00, 3.05, 15972);
+const GT_PREV    = googleTotalsFromCampaign(297.50, 6.00, 1.51, 51006);
+
+function blend(mt, gt){
+  const spend = mt.spend + gt.spend, results = mt.results + gt.results, revenue = mt.revenue + gt.revenue;
+  return { spend, results, revenue, cpa: spend/results, roas: revenue/spend };
+}
+const WEEKS = {
+  current: { label:"Jul 9 – Jul 15, 2026", ads: META_ADS_CURRENT, assets: GOOGLE_ASSETS_CURRENT, mt: MT_CURRENT, gt: GT_CURRENT, blended: blend(MT_CURRENT, GT_CURRENT) },
+  prev:    { label:"Jul 2 – Jul 9, 2026",  ads: META_ADS_PREV,    assets: GOOGLE_ASSETS_PREV,    mt: MT_PREV,    gt: GT_PREV,    blended: blend(MT_PREV, GT_PREV) },
 };
-BLENDED.cpa = BLENDED.spend / BLENDED.results;
-BLENDED.roas = BLENDED.revenue / BLENDED.spend;
 
 const fmt$ = n => '$' + n.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2});
 const fmtN = n => n.toLocaleString();
+const fmtPct = n => (n>=0?'+':'') + n.toFixed(1) + '%';
+function wow(curr, prevVal){ return prevVal? ((curr-prevVal)/prevVal*100) : null; }
+function chip(curr, prevVal, goodIsUp){
+  const p = wow(curr, prevVal);
+  if(p==null) return 'WoW: N/A';
+  const good = goodIsUp ? p>=0 : p<=0;
+  return `<span style="color:${good?'var(--good)':'var(--bad)'}">WoW: ${fmtPct(p)}</span>`;
+}
 
-/* ================= PLATFORM METRIC BLOCKS ================= */
-function renderPlatformBlocks(){
-  const blocks = [
-    {
-      key:'meta', title:'Meta', color:'var(--meta)', live:true,
-      rows:[
-        ['Spend', fmt$(MT.spend)],
-        ['Sales / Revenue', fmt$(MT.revenue)],
-        ['CPA', MT.cpa!=null? fmt$(MT.cpa) : '—'],
-        ['ROAS', MT.roas.toFixed(2)+'x'],
-      ]
-    },
-    {
-      key:'google', title:'Google', color:'var(--google)', live:true,
-      rows:[
-        ['Spend', fmt$(GT.spend)],
-        ['Sales / Revenue', fmt$(GT.revenue)],
-        ['CPA', GT.cpa!=null? fmt$(GT.cpa) : '—'],
-        ['ROAS', GT.roas.toFixed(2)+'x'],
-      ]
-    },
-    {
-      key:'youtube', title:'YouTube', color:'#ef4444', live:false,
-      rows:[
-        ['Spend', '—'],
-        ['Views', '—'],
-        ['Clicks', '—'],
-        ['Cost Per View (CPV)', '—'],
-      ]
-    },
-    {
-      key:'tiktok', title:'TikTok', color:'#a78bfa', live:false,
-      rows:[
-        ['Spend', '—'],
-        ['Sales / Revenue', '—'],
-      ]
-    },
+/* ================= STATE ================= */
+let currentWeek = 'current';
+let currentPlatform = 'meta';
+let sortKey = 'spend', sortDir = -1;
+let searchTerm = '';
+
+/* ================= CONSOLIDATION PANEL (always shows legacy-vs-new, independent of week toggle) ================= */
+function renderConsolidation(){
+  const legacy = { label:"3 legacy campaigns (last week, active)", spend: MT_PREV.spend, results: MT_PREV.results, roas: MT_PREV.roas, cpa: MT_PREV.cpa };
+  const merged = { label:"1 consolidated campaign (this week)", spend: MT_CURRENT.spend, results: MT_CURRENT.results, roas: MT_CURRENT.roas, cpa: MT_CURRENT.cpa };
+  const cards = [
+    { title: legacy.label, spend: legacy.spend, results: legacy.results, cpa: legacy.cpa, roas: legacy.roas, accent:'var(--muted)' },
+    { title: merged.label, spend: merged.spend, results: merged.results, cpa: merged.cpa, roas: merged.roas, accent:'var(--accent2)' },
+    { title:"Change", isDelta:true },
   ];
+  const spendDelta = wow(merged.spend, legacy.spend);
+  const resultsDelta = wow(merged.results, legacy.results);
+  const cpaDelta = wow(merged.cpa, legacy.cpa);
+  const roasDelta = wow(merged.roas, legacy.roas);
 
-  document.getElementById('platformBlocks').innerHTML = blocks.map(b=>`
-    <div class="card p-4 ${b.live?'':'opacity-70'}" style="border-top:3px solid ${b.color}; ${b.live?'':'border-style:dashed;'}"
-      <div class="flex items-center justify-between mb-2">
-        <div class="font-semibold text-sm" style="color:${b.color}">${b.title}</div>
-        <span class="text-[10px] px-2 py-0.5 rounded-full card2" style="color:${b.live?'var(--good)':'var(--muted)'}">${b.live?'● Live data':'○ Placeholder'}</span>
+  document.getElementById('consolidationGrid').innerHTML = `
+    <div class="card2 p-3">
+      <div class="text-xs font-semibold mb-2" style="color:var(--muted)">${cards[0].title}</div>
+      <div class="space-y-1 text-sm mono">
+        <div class="flex justify-between"><span style="color:var(--muted)">Spend</span><span>${fmt$(cards[0].spend)}</span></div>
+        <div class="flex justify-between"><span style="color:var(--muted)">Results</span><span>${fmtN(cards[0].results)}</span></div>
+        <div class="flex justify-between"><span style="color:var(--muted)">CPA</span><span>${cards[0].cpa!=null?fmt$(cards[0].cpa):'—'}</span></div>
+        <div class="flex justify-between"><span style="color:var(--muted)">ROAS</span><span>${cards[0].roas.toFixed(2)}x</span></div>
       </div>
-      <div class="space-y-1.5">
-        ${b.rows.map(([label,val])=>`
-          <div class="flex items-center justify-between text-sm">
-            <span style="color:var(--muted)">${label}</span>
-            <span class="mono font-medium">${val}</span>
-          </div>`).join('')}
+    </div>
+    <div class="card2 p-3" style="border:1px solid var(--accent2)">
+      <div class="text-xs font-semibold mb-2" style="color:var(--accent2)">${cards[1].title}</div>
+      <div class="space-y-1 text-sm mono">
+        <div class="flex justify-between"><span style="color:var(--muted)">Spend</span><span>${fmt$(cards[1].spend)}</span></div>
+        <div class="flex justify-between"><span style="color:var(--muted)">Results</span><span>${fmtN(cards[1].results)}</span></div>
+        <div class="flex justify-between"><span style="color:var(--muted)">CPA</span><span>${cards[1].cpa!=null?fmt$(cards[1].cpa):'—'}</span></div>
+        <div class="flex justify-between"><span style="color:var(--muted)">ROAS</span><span>${cards[1].roas.toFixed(2)}x</span></div>
       </div>
-    </div>`).join('');
+    </div>
+    <div class="card2 p-3">
+      <div class="text-xs font-semibold mb-2" style="color:var(--muted)">Change (new vs legacy)</div>
+      <div class="space-y-1 text-sm mono">
+        <div class="flex justify-between"><span style="color:var(--muted)">Spend</span>${chip(merged.spend, legacy.spend, false)}</div>
+        <div class="flex justify-between"><span style="color:var(--muted)">Results</span>${chip(merged.results, legacy.results, true)}</div>
+        <div class="flex justify-between"><span style="color:var(--muted)">CPA</span>${chip(merged.cpa, legacy.cpa, false)}</div>
+        <div class="flex justify-between"><span style="color:var(--muted)">ROAS</span>${chip(merged.roas, legacy.roas, true)}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('consolidationNote').textContent =
+    `Reads: consolidation cut spend ${Math.abs(spendDelta).toFixed(0)}% and results ${Math.abs(resultsDelta).toFixed(0)}%, while CPA rose ${Math.abs(cpaDelta).toFixed(0)}% and ROAS fell ${Math.abs(roasDelta).toFixed(0)}% vs. the 3 legacy campaigns' last full week. `
+    + `Additionally, $${META_LEGACY_RESIDUAL_CURRENT.spend.toFixed(2)} / ${META_LEGACY_RESIDUAL_CURRENT.results} conv. of residual spend posted this week from the legacy campaigns as they wound down — excluded from all totals above.`;
 }
 
 /* ================= KPI CARDS ================= */
 function renderKPIs(){
+  const w = WEEKS[currentWeek];
+  const pw = currentWeek==='current' ? WEEKS.prev : null;
   const cards = [
-    {label:"Total Spend", value: fmt$(BLENDED.spend), sub:"Meta + Google · active only", chip:"WoW: N/A — first tracked week"},
-    {label:"Conversions", value: fmtN(BLENDED.results), sub:"Purchases (Meta) + Conversions (Google)", chip:"WoW: N/A"},
-    {label:"Blended CPA", value: fmt$(BLENDED.cpa), sub:"Spend ÷ conversions", chip:"WoW: N/A"},
-    {label:"Blended ROAS", value: BLENDED.roas.toFixed(2)+"x", sub: fmt$(BLENDED.revenue)+" attributed revenue", chip:"WoW: N/A"},
+    {label:"Total Spend", value: fmt$(w.blended.spend), sub:"Meta + Google · active only", chip: pw? chip(w.blended.spend, pw.blended.spend, false) : 'Baseline week'},
+    {label:"Conversions", value: fmtN(w.blended.results), sub:"Purchases (Meta) + Conversions (Google)", chip: pw? chip(w.blended.results, pw.blended.results, true) : 'Baseline week'},
+    {label:"Blended CPA", value: fmt$(w.blended.cpa), sub:"Spend ÷ conversions", chip: pw? chip(w.blended.cpa, pw.blended.cpa, false) : 'Baseline week'},
+    {label:"Blended ROAS", value: w.blended.roas.toFixed(2)+"x", sub: fmt$(w.blended.revenue)+" attributed revenue", chip: pw? chip(w.blended.roas, pw.blended.roas, true) : 'Baseline week'},
   ];
   document.getElementById('kpiGrid').innerHTML = cards.map(c=>`
     <div class="card p-4">
       <div class="text-xs uppercase tracking-wide" style="color:var(--muted)">${c.label}</div>
       <div class="text-2xl font-bold mt-1 mono">${c.value}</div>
       <div class="text-xs mt-1" style="color:var(--muted)">${c.sub}</div>
-      <div class="text-[10px] mt-2 inline-block px-2 py-0.5 rounded-full card2" style="color:var(--muted)">${c.chip}</div>
+      <div class="text-[10px] mt-2 inline-block px-2 py-0.5 rounded-full card2">${c.chip}</div>
     </div>`).join('');
 }
 
-/* ================= CHART (canvas, no deps) ================= */
+/* ================= PLATFORM METRIC BLOCKS ================= */
+function renderPlatformBlocks(){
+  const w = WEEKS[currentWeek];
+  const pw = currentWeek==='current' ? WEEKS.prev : null;
+  const blocks = [
+    {
+      key:'meta', title:'Meta', color:'var(--meta)', live:true,
+      rows:[
+        ['Spend', fmt$(w.mt.spend), pw? chip(w.mt.spend, pw.mt.spend, false): null],
+        ['Sales / Revenue', fmt$(w.mt.revenue), pw? chip(w.mt.revenue, pw.mt.revenue, true): null],
+        ['CPA', w.mt.cpa!=null? fmt$(w.mt.cpa) : '—', pw? chip(w.mt.cpa, pw.mt.cpa, false): null],
+        ['ROAS', w.mt.roas.toFixed(2)+'x', pw? chip(w.mt.roas, pw.mt.roas, true): null],
+      ]
+    },
+    {
+      key:'google', title:'Google', color:'var(--google)', live:true,
+      rows:[
+        ['Spend', fmt$(w.gt.spend), pw? chip(w.gt.spend, pw.gt.spend, false): null],
+        ['Sales / Revenue', fmt$(w.gt.revenue), pw? chip(w.gt.revenue, pw.gt.revenue, true): null],
+        ['CPA', w.gt.cpa!=null? fmt$(w.gt.cpa) : '—', pw? chip(w.gt.cpa, pw.gt.cpa, false): null],
+        ['ROAS', w.gt.roas.toFixed(2)+'x', pw? chip(w.gt.roas, pw.gt.roas, true): null],
+      ]
+    },
+    {
+      key:'youtube', title:'YouTube', color:'#ef4444', live:false,
+      rows:[['Spend','—',null],['Views','—',null],['Clicks','—',null],['Cost Per View (CPV)','—',null]]
+    },
+    {
+      key:'tiktok', title:'TikTok', color:'#a78bfa', live:false,
+      rows:[['Spend','—',null],['Sales / Revenue','—',null]]
+    },
+  ];
+
+  document.getElementById('platformBlocks').innerHTML = blocks.map(b=>`
+    <div class="card p-4 ${b.live?'':'opacity-70'}" style="border-top:3px solid ${b.color}; ${b.live?'':'border-style:dashed;'}">
+      <div class="flex items-center justify-between mb-2">
+        <div class="font-semibold text-sm" style="color:${b.color}">${b.title}</div>
+        <span class="text-[10px] px-2 py-0.5 rounded-full card2" style="color:${b.live?'var(--good)':'var(--muted)'}">${b.live?'● Live data':'○ Placeholder'}</span>
+      </div>
+      <div class="space-y-1.5">
+        ${b.rows.map(([label,val,c])=>`
+          <div class="flex items-center justify-between text-sm">
+            <span style="color:var(--muted)">${label}</span>
+            <span class="flex items-center gap-2"><span class="mono font-medium">${val}</span>${c? `<span class="text-[10px]">${c}</span>`:''}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+/* ================= CHART (canvas, no deps) — always current vs prev, independent of dropdown ================= */
 function renderChart(){
   const canvas = document.getElementById('spendChart');
   const dpr = window.devicePixelRatio || 1;
@@ -239,8 +327,8 @@ function renderChart(){
   ctx.clearRect(0,0,cssW,cssH);
 
   const data = [
-    {label:"Meta", real: MT.spend, prev: MT.spend*0.9, color:"#5b8def"},
-    {label:"Google", real: GT.spend, prev: GT.spend*1.05, color:"#f4b942"},
+    {label:"Meta", real: MT_CURRENT.spend, prev: MT_PREV.spend, color:"#5b8def"},
+    {label:"Google", real: GT_CURRENT.spend, prev: GT_PREV.spend, color:"#f4b942"},
     {label:"YouTube", real: 0, prev: 0, color:"#ef4444"},
     {label:"TikTok", real: 0, prev: 0, color:"#a78bfa"},
   ];
@@ -249,7 +337,6 @@ function renderChart(){
   const plotW = cssW - padL - 20, plotH = cssH - padB - padT;
   const groupW = plotW/data.length;
 
-  // gridlines
   ctx.strokeStyle = '#1f2937'; ctx.fillStyle = '#8695a7'; ctx.font='10px monospace';
   for(let i=0;i<=4;i++){
     const y = padT + plotH - (plotH*i/4);
@@ -260,44 +347,32 @@ function renderChart(){
   data.forEach((d,i)=>{
     const gx = padL + i*groupW;
     const barW = groupW*0.28;
-    // previous week (hatched placeholder)
     const ph = (d.prev/max)*plotH;
     ctx.fillStyle = '#2a3342';
     ctx.fillRect(gx + groupW*0.18, padT+plotH-ph, barW, ph);
-    // hatch pattern lines
-    ctx.save();
-    ctx.beginPath(); ctx.rect(gx + groupW*0.18, padT+plotH-ph, barW, ph); ctx.clip();
-    ctx.strokeStyle='#1a2029'; ctx.lineWidth=3;
-    for(let x=-ph; x<barW; x+=8){
-      ctx.beginPath(); ctx.moveTo(gx+groupW*0.18+x, padT+plotH); ctx.lineTo(gx+groupW*0.18+x+ph, padT+plotH-ph); ctx.stroke();
-    }
-    ctx.restore();
 
-    // real week
     const rh = (d.real/max)*plotH;
     ctx.fillStyle = d.color;
     ctx.fillRect(gx + groupW*0.54, padT+plotH-rh, barW, rh);
 
-    // label
     ctx.fillStyle='#e7edf5'; ctx.font='11px sans-serif'; ctx.textAlign='center';
     ctx.fillText(d.label, gx+groupW/2, cssH-8);
     ctx.font='10px monospace'; ctx.fillStyle=d.color;
     ctx.fillText(d.real? '$'+Math.round(d.real):'—', gx+groupW*0.54+barW/2, padT+plotH-rh-6);
+    ctx.fillStyle='#6b7788';
+    ctx.fillText(d.prev? '$'+Math.round(d.prev):'—', gx+groupW*0.18+barW/2, padT+plotH-ph-6);
     ctx.textAlign='left';
   });
 }
 
-/* ================= TABS ================= */
-let currentPlatform = 'meta';
-let sortKey = 'spend', sortDir = -1;
-let searchTerm = '';
-
+/* ================= TABLE / TABS ================= */
 function platformRows(p){
-  if(p==='meta') return META_ADS.map(a=>({
+  const w = WEEKS[currentWeek];
+  if(p==='meta') return w.ads.map(a=>({
     status:'active', name:a.name, group:a.group, spend:a.spend, results:a.results,
     impr:a.impr, cpa: a.results? a.spend/a.results : null, roas:a.roas
   }));
-  if(p==='google') return GOOGLE_ASSETS.map(a=>({
+  if(p==='google') return w.assets.map(a=>({
     status:a.status, name:a.name, group:a.type, spend:a.cost, results:a.conv,
     impr:a.impr, cpa: a.conv? a.cost/a.conv : null, roas:a.roas
   }));
@@ -317,8 +392,9 @@ function renderTabs(){
 
 function renderTable(){
   const p = PLATFORMS[currentPlatform];
+  const w = WEEKS[currentWeek];
   document.getElementById('platformHeader').innerHTML = `
-    <h3 class="font-semibold text-sm">${p.label} — Ad / Asset Performance</h3>
+    <h3 class="font-semibold text-sm">${p.label} — Ad / Asset Performance <span class="text-xs font-normal" style="color:var(--muted)">(${w.label})</span></h3>
     <p class="text-xs" style="color:var(--muted)">${p.live? (currentPlatform==='google' ? 'Totals (Spend/CPA/ROAS above) use the official campaign-level report. This table is the asset-level breakdown for diagnostics only — do not sum its Spend column, asset costs overlap.' : 'Active campaigns only') : 'No connector configured yet for this platform'}</p>`;
 
   const tableEl = document.getElementById('dataTable');
@@ -367,11 +443,13 @@ document.querySelectorAll('.sort-btn').forEach(btn=>{
   });
 });
 document.getElementById('weekSelect').addEventListener('change', e=>{
-  if(e.target.value!=='current'){ e.target.value='current'; }
+  currentWeek = e.target.value;
+  renderKPIs(); renderPlatformBlocks(); renderTable();
 });
 
 /* ================= INIT ================= */
 renderKPIs();
+renderConsolidation();
 renderPlatformBlocks();
 renderChart();
 renderTabs();
